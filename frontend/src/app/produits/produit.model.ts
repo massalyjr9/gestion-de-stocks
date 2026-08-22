@@ -1,5 +1,5 @@
 export interface ProduitResponse {
-  id: number;
+  id: string;
   reference: string;
   nom: string;
   categorie: string | null;

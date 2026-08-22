@@ -6,14 +6,13 @@ import com.idrissamassaly.gestionstocks.entity.Produit;
 import com.idrissamassaly.gestionstocks.exception.DuplicateReferenceException;
 import com.idrissamassaly.gestionstocks.exception.ResourceNotFoundException;
 import com.idrissamassaly.gestionstocks.repository.ProduitRepository;
+import java.time.Instant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class ProduitService {
 
     private final ProduitRepository produitRepository;
@@ -24,7 +23,7 @@ public class ProduitService {
                 .toList();
     }
 
-    public ProduitResponse findById(Long id) {
+    public ProduitResponse findById(String id) {
         return ProduitResponse.from(getOrThrow(id));
     }
 
@@ -40,19 +39,17 @@ public class ProduitService {
                 .quantite(request.quantite())
                 .seuilAlerte(request.seuilAlerte())
                 .prixUnitaire(request.prixUnitaire())
+                .derniereMiseAJour(Instant.now())
                 .build();
         return ProduitResponse.from(produitRepository.save(produit));
     }
 
-    public ProduitResponse update(Long id, ProduitRequest request) {
+    public ProduitResponse update(String id, ProduitRequest request) {
         Produit produit = getOrThrow(id);
-        produitRepository.findAll().stream()
-                .filter(p -> !p.getId().equals(id) && p.getReference().equals(request.reference()))
-                .findAny()
-                .ifPresent(p -> {
-                    throw new DuplicateReferenceException(
-                            "Un produit avec la référence '" + request.reference() + "' existe déjà");
-                });
+        if (produitRepository.existsByReferenceAndIdNot(request.reference(), id)) {
+            throw new DuplicateReferenceException(
+                    "Un produit avec la référence '" + request.reference() + "' existe déjà");
+        }
 
         produit.setReference(request.reference());
         produit.setNom(request.nom());
@@ -60,17 +57,18 @@ public class ProduitService {
         produit.setQuantite(request.quantite());
         produit.setSeuilAlerte(request.seuilAlerte());
         produit.setPrixUnitaire(request.prixUnitaire());
+        produit.setDerniereMiseAJour(Instant.now());
         return ProduitResponse.from(produitRepository.save(produit));
     }
 
-    public void delete(Long id) {
+    public void delete(String id) {
         if (!produitRepository.existsById(id)) {
             throw new ResourceNotFoundException("Produit introuvable avec l'id " + id);
         }
         produitRepository.deleteById(id);
     }
 
-    private Produit getOrThrow(Long id) {
+    private Produit getOrThrow(String id) {
         return produitRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Produit introuvable avec l'id " + id));
     }

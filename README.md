@@ -4,7 +4,7 @@ Application full stack de gestion de stocks (CRUD produits, rôles utilisateurs,
 
 ## Stack technique
 
-- **Backend** : Java 21, Spring Boot 4, Spring Data JPA, Spring Security (rôles ADMIN/USER), Bean Validation, PostgreSQL / H2, JUnit 5, Mockito
+- **Backend** : Java 21, Spring Boot 4, Spring Data MongoDB, Spring Security (rôles ADMIN/USER), Bean Validation, JUnit 5, Mockito
 - **Frontend** : Angular 21 (standalone components, signals), TypeScript, Reactive Forms
 - **DevOps** : Docker, Docker Compose, GitHub Actions (CI)
 
@@ -20,12 +20,14 @@ Application full stack de gestion de stocks (CRUD produits, rôles utilisateurs,
 
 ### Backend
 
+Nécessite une instance MongoDB locale (`brew install mongodb-community && brew services start mongodb-community`, ou `docker run -d -p 27017:27017 mongo:7`).
+
 ```bash
 cd backend
 ./mvnw spring-boot:run
 ```
 
-L'API démarre sur `http://localhost:8080` avec une base H2 en mémoire, préremplie avec :
+L'API démarre sur `http://localhost:8080` et se connecte à `mongodb://localhost:27017/gestionstocks`. Au premier démarrage, elle préremplit la base avec :
 - `admin` / `admin123` (rôle ADMIN)
 - `user` / `user123` (rôle USER)
 
@@ -47,7 +49,7 @@ docker compose up --build
 
 - Frontend : `http://localhost:4200`
 - Backend : `http://localhost:8080`
-- PostgreSQL persisté dans un volume Docker
+- MongoDB persisté dans un volume Docker
 
 ## Tests
 

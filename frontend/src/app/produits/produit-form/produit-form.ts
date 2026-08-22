@@ -15,7 +15,7 @@ export class ProduitForm implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  private produitId: number | null = null;
+  private produitId: string | null = null;
   readonly isEditMode = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly saving = signal(false);
@@ -35,7 +35,7 @@ export class ProduitForm implements OnInit {
       return;
     }
 
-    this.produitId = Number(idParam);
+    this.produitId = idParam;
     this.isEditMode.set(true);
     this.produitService.findById(this.produitId).subscribe({
       next: (produit) =>

@@ -6,6 +6,7 @@ import com.idrissamassaly.gestionstocks.entity.User;
 import com.idrissamassaly.gestionstocks.repository.ProduitRepository;
 import com.idrissamassaly.gestionstocks.repository.UserRepository;
 import java.math.BigDecimal;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,6 +43,7 @@ public class DataSeeder implements CommandLineRunner {
                     .quantite(15)
                     .seuilAlerte(5)
                     .prixUnitaire(new BigDecimal("59.90"))
+                    .derniereMiseAJour(Instant.now())
                     .build());
             produitRepository.save(Produit.builder()
                     .reference("REF-002")
@@ -50,6 +52,7 @@ public class DataSeeder implements CommandLineRunner {
                     .quantite(3)
                     .seuilAlerte(5)
                     .prixUnitaire(new BigDecimal("219.00"))
+                    .derniereMiseAJour(Instant.now())
                     .build());
             produitRepository.save(Produit.builder()
                     .reference("REF-003")
@@ -58,6 +61,7 @@ public class DataSeeder implements CommandLineRunner {
                     .quantite(42)
                     .seuilAlerte(10)
                     .prixUnitaire(new BigDecimal("7.50"))
+                    .derniereMiseAJour(Instant.now())
                     .build());
         }
     }

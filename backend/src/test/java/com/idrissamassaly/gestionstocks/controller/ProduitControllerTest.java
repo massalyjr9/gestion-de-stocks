@@ -42,7 +42,7 @@ class ProduitControllerTest {
     private AppUserDetailsService appUserDetailsService;
 
     private ProduitResponse sample() {
-        return new ProduitResponse(1L, "REF-001", "Clavier", "Périphériques", 15, 5, false,
+        return new ProduitResponse("1", "REF-001", "Clavier", "Périphériques", 15, 5, false,
                 new BigDecimal("59.90"), Instant.now());
     }
 
@@ -91,7 +91,7 @@ class ProduitControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void supprimerProduit_roleAdmin_204() throws Exception {
-        mockMvc.perform(delete("/api/produits/{id}", 1L).with(csrf()))
+        mockMvc.perform(delete("/api/produits/{id}", "1").with(csrf()))
                 .andExpect(status().isNoContent());
     }
 

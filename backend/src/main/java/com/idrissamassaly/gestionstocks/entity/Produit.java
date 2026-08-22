@@ -1,13 +1,5 @@
 package com.idrissamassaly.gestionstocks.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.time.Instant;
 import lombok.AllArgsConstructor;
@@ -15,9 +7,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "produit", uniqueConstraints = @UniqueConstraint(columnNames = "reference"))
+@Document(collection = "produits")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,9 +20,9 @@ import lombok.Setter;
 public class Produit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
+    @Indexed(unique = true)
     private String reference;
 
     private String nom;
@@ -42,10 +36,4 @@ public class Produit {
     private BigDecimal prixUnitaire;
 
     private Instant derniereMiseAJour;
-
-    @PrePersist
-    @PreUpdate
-    private void onSave() {
-        this.derniereMiseAJour = Instant.now();
-    }
 }

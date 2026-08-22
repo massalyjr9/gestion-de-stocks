@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 public record ProduitResponse(
-        Long id,
+        String id,
         String reference,
         String nom,
         String categorie,

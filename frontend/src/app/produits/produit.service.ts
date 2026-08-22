@@ -13,7 +13,7 @@ export class ProduitService {
     return this.http.get<ProduitResponse[]>(this.baseUrl);
   }
 
-  findById(id: number): Observable<ProduitResponse> {
+  findById(id: string): Observable<ProduitResponse> {
     return this.http.get<ProduitResponse>(`${this.baseUrl}/${id}`);
   }
 
@@ -21,11 +21,11 @@ export class ProduitService {
     return this.http.post<ProduitResponse>(this.baseUrl, request);
   }
 
-  update(id: number, request: ProduitRequest): Observable<ProduitResponse> {
+  update(id: string, request: ProduitRequest): Observable<ProduitResponse> {
     return this.http.put<ProduitResponse>(`${this.baseUrl}/${id}`, request);
   }
 
-  delete(id: number): Observable<void> {
+  delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

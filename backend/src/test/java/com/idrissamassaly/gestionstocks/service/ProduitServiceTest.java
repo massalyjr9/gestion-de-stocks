@@ -32,7 +32,7 @@ class ProduitServiceTest {
 
     private Produit produit() {
         return Produit.builder()
-                .id(1L)
+                .id("1")
                 .reference("REF-001")
                 .nom("Clavier")
                 .categorie("Périphériques")
@@ -44,9 +44,9 @@ class ProduitServiceTest {
 
     @Test
     void findById_retourneLeProduitEtMarqueStockBas() {
-        when(produitRepository.findById(1L)).thenReturn(Optional.of(produit()));
+        when(produitRepository.findById("1")).thenReturn(Optional.of(produit()));
 
-        ProduitResponse response = produitService.findById(1L);
+        ProduitResponse response = produitService.findById("1");
 
         assertThat(response.reference()).isEqualTo("REF-001");
         assertThat(response.stockBas()).isTrue();
@@ -54,9 +54,9 @@ class ProduitServiceTest {
 
     @Test
     void findById_produitInconnu_leveResourceNotFound() {
-        when(produitRepository.findById(99L)).thenReturn(Optional.empty());
+        when(produitRepository.findById("99")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> produitService.findById(99L))
+        assertThatThrownBy(() -> produitService.findById("99"))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -77,30 +77,41 @@ class ProduitServiceTest {
         when(produitRepository.existsByReference("REF-002")).thenReturn(false);
         when(produitRepository.save(any(Produit.class))).thenAnswer(invocation -> {
             Produit p = invocation.getArgument(0);
-            p.setId(2L);
+            p.setId("2");
             return p;
         });
 
         ProduitResponse response = produitService.create(request);
 
-        assertThat(response.id()).isEqualTo(2L);
+        assertThat(response.id()).isEqualTo("2");
         assertThat(response.nom()).isEqualTo("Souris");
     }
 
     @Test
+    void update_referenceDejaUtiliseeParAutreProduit_leveDuplicateReference() {
+        ProduitRequest request = new ProduitRequest("REF-999", "Clavier", "Périphériques", 10, 5,
+                new BigDecimal("59.90"));
+        when(produitRepository.findById("1")).thenReturn(Optional.of(produit()));
+        when(produitRepository.existsByReferenceAndIdNot("REF-999", "1")).thenReturn(true);
+
+        assertThatThrownBy(() -> produitService.update("1", request))
+                .isInstanceOf(DuplicateReferenceException.class);
+    }
+
+    @Test
     void delete_produitExistant_supprime() {
-        when(produitRepository.existsById(1L)).thenReturn(true);
+        when(produitRepository.existsById("1")).thenReturn(true);
 
-        produitService.delete(1L);
+        produitService.delete("1");
 
-        verify(produitRepository).deleteById(1L);
+        verify(produitRepository).deleteById("1");
     }
 
     @Test
     void delete_produitInconnu_leveResourceNotFound() {
-        when(produitRepository.existsById(99L)).thenReturn(false);
+        when(produitRepository.existsById("99")).thenReturn(false);
 
-        assertThatThrownBy(() -> produitService.delete(99L))
+        assertThatThrownBy(() -> produitService.delete("99"))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 

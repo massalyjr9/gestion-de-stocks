@@ -31,7 +31,7 @@ public class ProduitController {
     }
 
     @GetMapping("/{id}")
-    public ProduitResponse findById(@PathVariable Long id) {
+    public ProduitResponse findById(@PathVariable String id) {
         return produitService.findById(id);
     }
 
@@ -44,13 +44,13 @@ public class ProduitController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ProduitResponse update(@PathVariable Long id, @Valid @RequestBody ProduitRequest request) {
+    public ProduitResponse update(@PathVariable String id, @Valid @RequestBody ProduitRequest request) {
         return produitService.update(id, request);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         produitService.delete(id);
         return ResponseEntity.noContent().build();
     }
