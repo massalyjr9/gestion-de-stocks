@@ -1,0 +1,14 @@
+@if (authService.isLoggedIn()) {
+  <nav class="topbar">
+    <span class="brand">Gestion de stocks</span>
+    <div class="topbar-right">
+      <span class="user">
+        {{ authService.currentUser()?.username }}
+        <span class="role">({{ authService.currentUser()?.role }})</span>
+      </span>
+      <button type="button" (click)="logout()">Déconnexion</button>
+    </div>
+  </nav>
+}
+
+<router-outlet />

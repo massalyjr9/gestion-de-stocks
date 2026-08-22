@@ -1,0 +1,40 @@
+<div class="login-page">
+  <form class="login-card" (ngSubmit)="submit()">
+    <h1>Gestion de stocks</h1>
+    <p class="subtitle">Connectez-vous pour accéder à l'application</p>
+
+    <label>
+      Utilisateur
+      <input
+        type="text"
+        name="username"
+        [ngModel]="username()"
+        (ngModelChange)="username.set($event)"
+        required
+        autocomplete="username"
+      />
+    </label>
+
+    <label>
+      Mot de passe
+      <input
+        type="password"
+        name="password"
+        [ngModel]="password()"
+        (ngModelChange)="password.set($event)"
+        required
+        autocomplete="current-password"
+      />
+    </label>
+
+    @if (errorMessage()) {
+      <p class="error">{{ errorMessage() }}</p>
+    }
+
+    <button type="submit" [disabled]="loading()">
+      {{ loading() ? 'Connexion…' : 'Se connecter' }}
+    </button>
+
+    <p class="hint">Démo : admin / admin123 (ADMIN) · user / user123 (USER)</p>
+  </form>
+</div>
